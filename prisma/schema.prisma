@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model taiko_account {
+  vid                        BigInt
+  block_range                String
+  id                         Bytes
+  balance                    Decimal @db.Decimal
+  last_transaction_timestamp Decimal @db.Decimal
+  is_minter                  Boolean
+  gs_chain                   String  @map("_gs_chain")
+  gs_gid                     String  @id @map("_gs_gid")
+}
+
+model taiko_approval {
+  vid              BigInt
+  block            Int
+  id               Bytes
+  owner            Bytes
+  spender          Bytes
+  value            Decimal @db.Decimal
+  block_number     Decimal @db.Decimal
+  block_timestamp  Decimal @db.Decimal
+  transaction_hash Bytes
+  gs_chain         String  @map("_gs_chain")
+  gs_gid           String  @id @map("_gs_gid")
+}
+
+model taiko_daily_metric {
+  vid                    BigInt
+  block_range            String
+  id                     Bytes
+  date                   String
+  transfer_count         Decimal @db.Decimal
+  active_users           Decimal @db.Decimal
+  volume                 Decimal @db.Decimal
+  mint_volume            Decimal @db.Decimal
+  burn_volume            Decimal @db.Decimal
+  average_transfer_value Decimal @db.Decimal
+  largest_transfer       Decimal @db.Decimal
+  unique_minters         Decimal @db.Decimal
+  gs_chain               String  @map("_gs_chain")
+  gs_gid                 String  @id @map("_gs_gid")
+}
+
+model taiko_hourly_metric {
+  vid                    BigInt
+  block_range            String
+  id                     Bytes
+  hour                   String
+  transfer_count         Decimal @db.Decimal
+  active_users           Decimal @db.Decimal
+  volume                 Decimal @db.Decimal
+  mint_volume            Decimal @db.Decimal
+  burn_volume            Decimal @db.Decimal
+  average_transfer_value Decimal @db.Decimal
+  gs_chain               String  @map("_gs_chain")
+  gs_gid                 String  @id @map("_gs_gid")
+}
+
+model taiko_minter {
+  vid                     BigInt
+  block_range             String
+  id                      Bytes
+  address                 Bytes
+  token                   Bytes
+  added_at                Decimal  @db.Decimal
+  removed_at              Decimal? @db.Decimal
+  is_active               Boolean
+  minted_amount           Decimal  @db.Decimal
+  mint_count              Decimal  @db.Decimal
+  add_transaction_hash    Bytes
+  remove_transaction_hash Bytes?
+  gs_chain                String   @map("_gs_chain")
+  gs_gid                  String   @id @map("_gs_gid")
+}
+
+model taiko_ownership_transferred {
+  vid              BigInt
+  block            Int
+  id               Bytes
+  previous_owner   Bytes
+  new_owner        Bytes
+  block_number     Decimal @db.Decimal
+  block_timestamp  Decimal @db.Decimal
+  transaction_hash Bytes
+  gs_chain         String  @map("_gs_chain")
+  gs_gid           String  @id @map("_gs_gid")
+}
+
+model taiko_token {
+  vid                   BigInt
+  block_range           String
+  id                    Bytes
+  symbol                String
+  name                  String
+  decimals              Int
+  total_supply          Decimal @db.Decimal
+  transfer_count        Decimal @db.Decimal
+  holder_count          Decimal @db.Decimal
+  last_update_timestamp Decimal @db.Decimal
+  owner                 Bytes
+  gs_chain              String  @map("_gs_chain")
+  gs_gid                String  @id @map("_gs_gid")
+}
+
+model taiko_transfer {
+  vid              BigInt
+  block_range      String
+  id               Bytes
+  from             Bytes
+  to               Bytes
+  value            Decimal @db.Decimal
+  block_number     Decimal @db.Decimal
+  block_timestamp  Decimal @db.Decimal
+  transaction_hash Bytes
+  is_mint          Boolean
+  is_burn          Boolean
+  gs_chain         String  @map("_gs_chain")
+  gs_gid           String  @id @map("_gs_gid")
+}
