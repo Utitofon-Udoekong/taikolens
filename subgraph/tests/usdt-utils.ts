@@ -7,7 +7,7 @@ import {
   MinterRemoved,
   OwnershipTransferred,
   Transfer
-} from "../generated/ERC20/ERC20"
+} from "../generated/usdt/usdt"
 
 export function createApprovalEvent(
   owner: Address,

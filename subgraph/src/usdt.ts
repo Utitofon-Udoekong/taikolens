@@ -5,7 +5,7 @@ import {
   MinterRemoved as MinterRemovedEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   Transfer as TransferEvent
-} from "../generated/ERC20/ERC20"
+} from "../generated/usdt/usdt"
 import {
   Approval,
   Initialized,

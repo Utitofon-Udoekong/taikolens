@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { Approval } from "../generated/schema"
-import { Approval as ApprovalEvent } from "../generated/ERC20/ERC20"
-import { handleApproval } from "../src/erc-20"
-import { createApprovalEvent } from "./erc-20-utils"
+import { Approval as ApprovalEvent } from "../generated/usdt/usdt"
+import { handleApproval } from "../src/usdt"
+import { createApprovalEvent } from "./usdt-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

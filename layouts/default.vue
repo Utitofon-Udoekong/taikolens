@@ -30,7 +30,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const navigation = [
     { name: 'Overview', path: '/' },
     { name: 'Transfers', path: '/transfers' },

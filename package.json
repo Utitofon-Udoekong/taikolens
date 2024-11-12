@@ -13,7 +13,7 @@
     "subgraph:build": "cd subgraph && yarn run build",
     "subgraph:codegen": "cd subgraph && yarn run codegen",
     "subgraph:prepare": "cd subgraph && graph codegen && graph build",
-    "subgraph:deploy-live": "cd subgraph && goldsky subgraph deploy taikolens-taiko/1.0.0",
+    "subgraph:deploy-live": "cd subgraph && goldsky subgraph deploy taikolens/1.0.0",
     "subgraph:create-local": "cd subgraph && yarn run create-local",
     "subgraph:remove-local": "cd subgraph && yarn run remove-local",
     "subgraph:deploy-local": "cd subgraph && yarn run deploy-local"
