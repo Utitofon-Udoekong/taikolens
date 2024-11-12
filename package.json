@@ -1,0 +1,33 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "subgraph": "graph init",
+    "subgraph:clean": "cd subgraph && graph clean && npx npkill",
+    "subgraph:build": "cd subgraph && yarn run build",
+    "subgraph:codegen": "cd subgraph && yarn run codegen",
+    "subgraph:prepare": "cd subgraph && graph codegen && graph build",
+    "subgraph:deploy-live": "cd subgraph && goldsky subgraph deploy taikolens-taiko/1.0.0",
+    "subgraph:create-local": "cd subgraph && yarn run create-local",
+    "subgraph:remove-local": "cd subgraph && yarn run remove-local",
+    "subgraph:deploy-local": "cd subgraph && yarn run deploy-local"
+  },
+  "dependencies": {
+    "@nuxtjs/supabase": "^1.4.2",
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@pinia/nuxt": "^0.7.0",
+    "chart.js": "^4.4.6",
+    "lucide-vue-next": "^0.456.0",
+    "nuxt": "^3.14.159",
+    "vue": "latest",
+    "vue-chartjs": "^5.3.2",
+    "vue-router": "latest"
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
+}
