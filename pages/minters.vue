@@ -48,7 +48,6 @@
   
   <script setup>
   import { computed } from 'vue'
-  import { Users, TrendingUp, BarChart } from 'lucide-vue-next'
   import MetricCard from '~/components/MetricCard.vue'
   import MintingChart from '~/components/MintingChart.vue'
   import MinterDistributionChart from '~/components/MinterDistributionChart.vue'

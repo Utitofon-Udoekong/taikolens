@@ -1,4 +1,3 @@
-<!-- pages/metrics.vue -->
 <template>
     <div>
       <div class="sm:flex sm:items-center">

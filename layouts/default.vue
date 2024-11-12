@@ -35,6 +35,12 @@ const navigation = [
     { name: 'Overview', path: '/' },
     { name: 'Transfers', path: '/transfers' },
     { name: 'Minters', path: '/minters' },
-    { name: 'Analytics', path: '/analytics' }
+    { name: 'Metrics', path: '/metrics' }
 ]
 </script>
+
+<style>
+.nav-link {
+  @apply inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900;
+}
+</style> 
