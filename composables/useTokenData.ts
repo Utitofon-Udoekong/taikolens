@@ -1,14 +1,14 @@
-import { ref } from 'vue'
-import type { TokenMetrics, DailyMetric, Transfer, Minter } from '../types'
 
 export const useTokenData = () => {
-  const tokenMetrics = ref<TokenMetrics | null>(null)
+  const tokenMetrics = ref<TokenMetric[]>([])
   const dailyMetrics = ref<DailyMetric[]>([])
+  const hourlyMetrics = ref<HourlyMetric[]>([])
   const recentTransfers = ref<Transfer[]>([])
   const activeMinters = ref<Minter[]>([])
   const loading = ref({
     token: false,
     daily: false,
+    hourly: false,
     transfers: false,
     minters: false
   })
@@ -16,8 +16,9 @@ export const useTokenData = () => {
   const fetchTokenMetrics = async () => {
     loading.value.token = true
     try {
-      const { data } = await useFetch<TokenMetrics>('/api/token/metrics')
-      if (data.value) tokenMetrics.value = data.value
+      const { data } = await useFetch<TokenMetric[]>('/api/token/metrics')
+      console.log(data.value)
+      if (data.value) tokenMetrics.value == data.value
     } catch (error) {
       console.error('Failed to fetch token metrics:', error)
     } finally {
@@ -31,11 +32,27 @@ export const useTokenData = () => {
       const { data } = await useFetch<DailyMetric[]>('/api/metrics/daily', {
         query: { days }
       })
+      console.log(data.value)
       if (data.value) dailyMetrics.value = data.value
     } catch (error) {
       console.error('Failed to fetch daily metrics:', error)
     } finally {
       loading.value.daily = false
+    }
+  }
+
+  const fetchHourlyMetrics = async (hours = 30) => {
+    loading.value.hourly = true
+    try {
+      const { data } = await useFetch<HourlyMetric[]>('/api/metrics/hourly', {
+        query: { hours }
+      })
+      console.log(data.value)
+      if (data.value) hourlyMetrics.value = data.value
+    } catch (error) {
+      console.error('Failed to fetch hourly metrics:', error)
+    } finally {
+      loading.value.hourly = false
     }
   }
 
@@ -45,6 +62,7 @@ export const useTokenData = () => {
       const { data } = await useFetch<Transfer[]>('/api/transfers/recent', {
         query: { limit }
       })
+      console.log(data.value)
       if (data.value) recentTransfers.value = data.value
     } catch (error) {
       console.error('Failed to fetch recent transfers:', error)
@@ -57,6 +75,7 @@ export const useTokenData = () => {
     loading.value.minters = true
     try {
       const { data } = await useFetch<Minter[]>('/api/minters/active')
+      console.log(data.value)
       if (data.value) activeMinters.value = data.value
     } catch (error) {
       console.error('Failed to fetch active minters:', error)
@@ -68,11 +87,13 @@ export const useTokenData = () => {
   return {
     tokenMetrics,
     dailyMetrics,
+    hourlyMetrics,
     recentTransfers,
     activeMinters,
     loading,
     fetchTokenMetrics,
     fetchDailyMetrics,
+    fetchHourlyMetrics,
     fetchRecentTransfers,
     fetchActiveMinters
   }

@@ -22,8 +22,7 @@
     </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -48,12 +47,11 @@ ChartJS.register(
     Legend
 )
 
-const props = defineProps({
-    metrics: {
-        type: Array,
-        required: true
-    }
-})
+const props = defineProps<{
+    metrics: TokenMetric[]
+}>()
+
+console.log(props)
 
 const chartOptions = {
     responsive: true,
@@ -67,7 +65,7 @@ const chartOptions = {
         y: {
             beginAtZero: true,
             ticks: {
-                callback: (value) => {
+                callback: (value: any) => {
                     return new Intl.NumberFormat('en-US', {
                         notation: 'compact',
                         compactDisplay: 'short'
@@ -79,14 +77,14 @@ const chartOptions = {
 }
 
 const labels = computed(() => {
-    return props.metrics.map(m => new Date(m.date).toLocaleDateString())
+    return props.metrics.map(m => new Date(m.last_update_timestamp).toLocaleDateString())
 })
 
 const volumeChartData = computed(() => ({
     labels: labels.value,
     datasets: [{
         label: 'Daily Volume',
-        data: props.metrics.map(m => m.daily_volume),
+        data: props.metrics.map(m => m.total_supply),
         borderColor: '#10B981',
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         fill: true
@@ -97,7 +95,7 @@ const usersChartData = computed(() => ({
     labels: labels.value,
     datasets: [{
         label: 'Active Users',
-        data: props.metrics.map(m => m.daily_active_users),
+        data: props.metrics.map(m => m.holder_count),
         borderColor: '#3B82F6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true
@@ -108,7 +106,7 @@ const transfersChartData = computed(() => ({
     labels: labels.value,
     datasets: [{
         label: 'Transfer Count',
-        data: props.metrics.map(m => m.daily_transfer_count),
+        data: props.metrics.map(m => m.transfer_count),
         backgroundColor: '#6366F1'
     }]
 }))
@@ -117,7 +115,7 @@ const avgValueChartData = computed(() => ({
     labels: labels.value,
     datasets: [{
         label: 'Average Transfer Value',
-        data: props.metrics.map(m => m.average_transfer_value),
+        data: props.metrics.map(m => m.total_supply),
         borderColor: '#8B5CF6',
         backgroundColor: 'rgba(139, 92, 246, 0.1)',
         fill: true
