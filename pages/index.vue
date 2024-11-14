@@ -189,18 +189,18 @@ const volumeChartData = computed(() => ({
     borderColor: '#3b82f6',
     backgroundColor: '#3b82f64d',
     fill: true,
-    tension: 0.4
+    tension: 0.1
   }]
 }))
 
 const chartOptions = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   scales: {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value: number) => formatCurrency(value)
+        callback: (tickValue: string | number) => formatCurrency(Number(tickValue))
       }
     }
   },
