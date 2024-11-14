@@ -55,6 +55,17 @@ export interface BlockReward {
     blockReward: string;
 }
 
+export interface TokenLoader {
+    token: boolean;
+    daily: boolean;
+    hourly: boolean;
+    transfers: boolean;
+    accounts: boolean;
+    blockRewards: boolean;
+    ethPrice: boolean;
+    ethSupply: boolean;
+}
+
 export interface EthPrice {
     ethbtc: string;
     ethbtc_timestamp: string;

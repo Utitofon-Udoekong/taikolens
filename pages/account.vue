@@ -2,15 +2,15 @@
   <div>
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-gray-900">account History</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Account History</h1>
         <p class="mt-2 text-sm text-gray-700">
-          A detailed list of all USDT accounts on the Taiko network. {{ accounts.length}}
+          A detailed list of USDT accounts on the Taiko network. 
         </p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
         <div class="flex space-x-4">
-          <!-- v-model="filterType" -->
           <select
+            v-model="filterType"
             class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm"
           >
             <option value="all">All accounts</option>
@@ -39,9 +39,9 @@
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Network
                   </th>
-                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                  <!-- <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Block Range
-                  </th>
+                  </th> -->
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Last Transaction
                   </th>
@@ -49,7 +49,7 @@
               </thead>
               <Loader class="mx-auto p-4" v-if="loading.accounts" :loading="loading.accounts" />
               <tbody v-else class="divide-y divide-gray-200 bg-white">
-                <tr v-for="(account, index) of filteredAccounts" :key="index">
+                <tr v-for="(account, index) in filteredAccounts" :key="index">
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm">
                     <a
                       :href="`https://explorer.test.taiko.xyz/tx/${getArray(account.id)}`"
@@ -68,9 +68,9 @@
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-black">
                     <p class="text-pink-600 bg-pink-600/20 inline p-1 rounded-md">{{ account.gs_chain }}</p>
                   </td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-black">
+                  <!-- <td class="whitespace-nowrap px-3 py-4 text-sm text-black">
                     {{ account.block_range }}
-                  </td>
+                  </td> -->
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-black">
                     {{ formatDate(account.last_transaction_timestamp) }}
                   </td>

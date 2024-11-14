@@ -6,7 +6,7 @@ export const useTokenData = () => {
   const dailyMetrics = ref<DailyMetric[]>([])
   const hourlyMetrics = ref<HourlyMetric[]>([])
   const recentTransfers = ref<Transfer[]>([])
-  const loading = ref({
+  const loading = ref<TokenLoader>({
     token: false,
     daily: false,
     hourly: false,
@@ -103,7 +103,6 @@ export const useTokenData = () => {
           'Accept': 'application/json',
         }
       })
-      console.log(data.value)
       return data.value
     } catch (error) {
       console.error(`Failed to fetch ${module}/${action}:`, error)
@@ -111,9 +110,26 @@ export const useTokenData = () => {
     }
   }
 
-  const fetchBlockReward = async (blockNo: string) => {
+  const fetchBlockNoByTimestamp = async (timestamp: string) => {
+    try {
+      const data = await fetchTaikoScanData('block', 'getblocknobytime', {
+        timestamp: timestamp,
+        closest: 'before'
+      })
+      if(data?.result){
+        return data?.result
+      }
+    } catch (error) {
+      console.error(`Failed to fetch getblocknobytime:`, timestamp)
+      return null
+    }
+  }
+
+  const fetchBlockReward = async (timeStamp: string) => {
     loading.value.blockRewards = true
     try {
+      const blockNo = await fetchBlockNoByTimestamp(timeStamp)
+      console.log(blockNo)
       const data = await fetchTaikoScanData('block', 'getblockreward', {
         blockno: blockNo
       })

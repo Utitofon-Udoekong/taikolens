@@ -15,13 +15,14 @@
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <CurrencyDollarIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+              <IconsDollar class="h-6 w-6 text-gray-400" aria-hidden="true" />
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">24h Volume</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">
+                  <Loader v-if="loading.daily" :loading="loading.daily" />
+                  <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatCurrency(last24hVolume) }}
                   </div>
                 </dd>
@@ -35,13 +36,14 @@
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <ArrowsRightLeftIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+              <IconsTransfer class="h-6 w-6 text-gray-400" aria-hidden="true" />
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">24h Transfers</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">
+                  <Loader v-if="loading.daily" :loading="loading.daily" />
+                  <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatAmount(last24hTransfers) }}
                   </div>
                 </dd>
@@ -55,13 +57,14 @@
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <UsersIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+              <IconsUsers class="h-6 w-6 text-gray-400" aria-hidden="true" />
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Active Users</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">
+                  <Loader v-if="loading.daily" :loading="loading.daily" />
+                  <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatAmount(activeUsers) }}
                   </div>
                 </dd>
@@ -75,13 +78,14 @@
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <ChartBarIcon class="h-6 w-6 text-gray-400" aria-hidden="true" />
+              <IconsBarChart class="h-6 w-6 text-gray-400" aria-hidden="true" />
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">ETH Price</dt>
                 <dd class="flex items-baseline">
-                  <div class="text-2xl font-semibold text-gray-900">
+                  <Loader v-if="loading.ethPrice" :loading="loading.ethPrice" />
+                  <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatCurrency(Number(ethPrice?.ethusd || 0)) }}
                   </div>
                 </dd>
@@ -96,7 +100,9 @@
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
       <div class="bg-white shadow rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Volume Trend</h3>
+        <Loader v-if="loading.daily" :loading="loading.daily" />
         <LineChart
+          v-else
           :data="volumeChartData"
           :options="chartOptions"
           class="h-[300px]"
@@ -106,7 +112,8 @@
       <div class="bg-white shadow rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Transfers</h3>
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-300">
+          <Loader v-if="loading.transfers" :loading="loading.transfers" />
+          <table v-else class="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Hash</th>
@@ -159,6 +166,7 @@ const {
   recentTransfers,
   dailyMetrics,
   ethPrice,
+  loading,
   fetchRecentTransfers,
   fetchDailyMetrics,
   fetchEthPrice,

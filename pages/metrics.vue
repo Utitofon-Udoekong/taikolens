@@ -91,6 +91,6 @@ onMounted(async () => {
 
   // Fetch the latest block reward
   // You might want to get the latest block number first
-  await fetchBlockReward('latest')
+  await fetchBlockReward(dailyMetrics.value[0].date)
 })
 </script>
