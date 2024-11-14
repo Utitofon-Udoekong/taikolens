@@ -1,5 +1,6 @@
-import prisma from '~/lib/prisma'
-import { json } from '~/utils/formatters'
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -29,7 +30,8 @@ export default defineEventHandler(async (event) => {
         token: true
       }
     })
-    return json(minters)
+    console.log('minters',jsonFormat(minters))
+    return jsonFormat(minters)
   } catch (error) {
     throw createError({
       statusCode: 500,

@@ -1,5 +1,6 @@
-import prisma from '~/lib/prisma'
-import { json } from '~/utils/formatters'
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -7,7 +8,7 @@ export default defineEventHandler(async (event) => {
   // const page = Number(query.page) ?? null
 
   try {
-    const transfers = await prisma.taiko_transfer.findMany({
+    const transfers: Transfer[] = (await prisma.taiko_transfer.findMany({
       take: limit,
       orderBy: {
         block_timestamp: 'desc'
@@ -22,10 +23,19 @@ export default defineEventHandler(async (event) => {
         is_mint: true,
         to: true,
         transaction_hash: true,
-        value: true
+        value: true,
+        gs_chain: true,
+        vid: false,
+        gs_gid: false,
       }
-    })
-    return json(transfers)
+    })).map(transfer => ({
+      ...transfer,
+      block_number: Number(transfer.block_number),
+      block_timestamp: Number(transfer.block_timestamp),
+      value: Number(transfer.value),
+    }))
+    console.log('transfers: ',jsonFormat(transfers))
+    return jsonFormat(transfers)
   } catch (error) {
     throw createError({
       statusCode: 500,

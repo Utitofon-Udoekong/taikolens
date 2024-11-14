@@ -15,18 +15,18 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                <tr v-for="transfer in transfers" :key="transfer.id">
+                                <tr v-for="transfer in transfers" :key="transfer.block_number">
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500">
-                                        {{ shortenAddress(transfer.from_address) }}
+                                        {{ shortenAddress(transfer.from) }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                        {{ shortenAddress(transfer.to_address) }}
+                                        {{ shortenAddress(transfer.to) }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
                                         {{ formatAmount(transfer.value) }}
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                        {{ formatDate(transfer.timestamp) }}
+                                        {{ formatDate(transfer.block_timestamp) }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -38,13 +38,10 @@
     </div>
 </template>
 
-<script setup>
-defineProps({
-    transfers: {
-        type: Array,
-        required: true
-    }
-})
+<script setup lang="ts">
+defineProps<{
+    transfers: Transfer[]
+}>()
 
 const shortenAddress = (address) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`

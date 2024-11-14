@@ -33,8 +33,8 @@
 <script setup lang="ts">
 const navigation = [
     { name: 'Overview', path: '/' },
+    { name: 'Accounts', path: '/account' },
     { name: 'Transfers', path: '/transfers' },
-    { name: 'Minters', path: '/minters' },
     { name: 'Metrics', path: '/metrics' }
 ]
 </script>

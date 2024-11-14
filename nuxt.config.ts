@@ -15,5 +15,5 @@ export default defineNuxtConfig({
     public: {
       contractAddress: process.env.CONTRACT_ADDRESS
     }
-  }
+  },
 })

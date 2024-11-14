@@ -11,7 +11,7 @@
         <div class="flex space-x-4">
           <select
             v-model="filterType"
-            class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+            class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm"
           >
             <option value="all">All Transfers</option>
             <option value="mints">Mints Only</option>
@@ -31,6 +31,9 @@
                   <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
                     Transaction
                   </th>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">
+                    Block
+                  </th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     From
                   </th>
@@ -45,22 +48,28 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="transfer in filteredTransfers" :key="transfer.transaction_hash">
+              <div class="flex justify-center p-4 w-full" v-if="loading.transfers">
+                <Loader :loading="loading.transfers" />
+              </div>
+              <tbody v-else class="divide-y divide-gray-200 bg-white">
+                <tr v-for="transfer, index in filteredTransfers" :key="index">
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm">
                     <a
-                      :href="`https://explorer.test.taiko.xyz/tx/${transfer.transaction_hash}`"
+                      :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`"
                       target="_blank"
-                      class="text-green-600 hover:text-green-900"
+                      class="text-pink-600 hover:text-pink-900"
                     >
-                      {{ shortenHash(transfer.transaction_hash) }}
+                      {{ truncateHash(getArray(transfer.transaction_hash)) }}
                     </a>
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ shortenAddress(transfer.from) }}
+                    {{ transfer.block_number }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ shortenAddress(transfer.to) }}
+                    {{ truncateHash(getArray(transfer.from)) }}
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {{ truncateHash(getArray(transfer.to)) }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ formatAmount(transfer.value) }}
@@ -80,7 +89,7 @@
       <div class="flex items-center">
         <select
           v-model="pageSize"
-          class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+          class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-pink-500 focus:outline-none focus:ring-pink-500 sm:text-sm"
         >
           <option value="10">10 per page</option>
           <option value="25">25 per page</option>
@@ -89,6 +98,7 @@
       </div>
       
       <div class="flex items-center space-x-2">
+        <!-- ///TODO -->
         <!-- <button
           @click="prevPage"
           :disabled="page === 1"
@@ -111,10 +121,10 @@
 </template>
 
 <script setup lang="ts">
-const { recentTransfers, fetchRecentTransfers } = useTokenData()
+const { recentTransfers, loading, fetchRecentTransfers } = useTokenData()
 const filterType = ref('all')
 const page = ref(1)
-const pageSize = ref(25)
+const pageSize = ref(10)
 
 const filteredTransfers = computed(() => {
   if (filterType.value === 'all') return recentTransfers.value
@@ -122,13 +132,15 @@ const filteredTransfers = computed(() => {
   if (filterType.value === 'burns') return recentTransfers.value.filter(t => t.is_burn)
 })
 
+
+
 const hasMorePages = computed(() => {
   return recentTransfers.value.length === pageSize.value
 })
 
-// watch([page, pageSize, filterType], () => {
-//   fetchRecentTransfers(pageSize.value, (page.value - 1) * pageSize.value)
-// })
+watch([pageSize], () => {
+  fetchRecentTransfers(pageSize.value)
+})
 
 onMounted(() => {
   fetchRecentTransfers()

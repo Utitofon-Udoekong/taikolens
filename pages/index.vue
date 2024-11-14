@@ -20,7 +20,7 @@
     <!-- <MetricsCharts :metrics="tokenMetrics" ></MetricsCharts> -->
 
     <div class="mt-8">
-      <RecentTransfers :transfers="recentTransfers" />
+      <TransferHistory :transfers="recentTransfers" />
     </div>
   </div>
 </template>
@@ -28,17 +28,8 @@
 <script setup lang="ts">
 
 const {
-  tokenMetrics,
-  dailyMetrics,
-  hourlyMetrics,
   recentTransfers,
-  activeMinters,
-  loading,
-  fetchTokenMetrics,
-  fetchDailyMetrics,
-  fetchHourlyMetrics,
   fetchRecentTransfers,
-  fetchActiveMinters
 } = useTokenData()
 
 // Format utilities
@@ -53,11 +44,7 @@ const formatNumber = (num: number) => {
 // Fetch data on mount
 onMounted(async () => {
   await Promise.all([
-    fetchTokenMetrics(),
-    fetchDailyMetrics(),
-    fetchHourlyMetrics(),
-    fetchRecentTransfers(),
-    fetchActiveMinters()
+    fetchRecentTransfers()
   ])
 })
 </script>

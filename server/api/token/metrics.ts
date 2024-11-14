@@ -1,10 +1,11 @@
-import prisma from '~/lib/prisma'
-import { json } from '~/utils/formatters'
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const limit = Number(query.limit) || 30
-
   try {
     const token = await prisma.taiko_token.findFirst({
       take: limit,
@@ -21,10 +22,13 @@ export default defineEventHandler(async (event) => {
         name: true,
         owner: true,
         total_supply: true,
-        transfer_count: true
+        transfer_count: true,
+        vid: false,
+        gs_chain: true,
+        gs_gid: false,
       }
     })
-    return json(token)
+    return jsonFormat(token)
   } catch (error) {
     throw createError({
       statusCode: 500,

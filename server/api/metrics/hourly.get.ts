@@ -1,29 +1,41 @@
-import prisma from '~/lib/prisma'
-import { json } from '~/utils/formatters'
 
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const hours = Number(query.hours) || 24
 
   try {
-    const metrics = await prisma.taiko_hourly_metric.findMany({
+    const metrics: HourlyMetric[] = (await prisma.taiko_hourly_metric.findMany({
       take: hours,
       orderBy: {
         hour: 'desc'
       },
       select: {
         id: true,
-        hour: true,
         block_range: true,
-        average_transfer_value: true,
-        active_users: true,
-        burn_volume: true,
-        mint_volume: true,
+        hour: true,
         transfer_count: true,
+        active_users: true,
         volume: true,
+        mint_volume: true,
+        burn_volume: true,
+        average_transfer_value: true,
+        gs_chain: true,
+        gs_gid: false,
       }
-    })
-    return json(metrics)
+    })).map(metric => ({
+      ...metric,
+      transfer_count: Number(metric.transfer_count),
+      volume: Number(metric.volume),
+      mint_volume: Number(metric.mint_volume),
+      burn_volume: Number(metric.burn_volume),
+      average_transfer_value: Number(metric.average_transfer_value),
+      active_users: Number(metric.active_users),
+    }))
+    console.table('metrics: ',jsonFormat(metrics))
+    return jsonFormat(metrics)
   } catch (error) {
     throw createError({
       statusCode: 500,

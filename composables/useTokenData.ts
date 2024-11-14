@@ -1,16 +1,16 @@
 
 export const useTokenData = () => {
+  const accounts = ref<Account[]>([])
   const tokenMetrics = ref<TokenMetric[]>([])
   const dailyMetrics = ref<DailyMetric[]>([])
   const hourlyMetrics = ref<HourlyMetric[]>([])
   const recentTransfers = ref<Transfer[]>([])
-  const activeMinters = ref<Minter[]>([])
   const loading = ref({
     token: false,
     daily: false,
     hourly: false,
     transfers: false,
-    minters: false
+    accounts: false
   })
 
   const fetchTokenMetrics = async () => {
@@ -71,30 +71,32 @@ export const useTokenData = () => {
     }
   }
 
-  const fetchActiveMinters = async () => {
-    loading.value.minters = true
+  const fetchAccounts = async (limit = 10) => {
+    loading.value.accounts = true
     try {
-      const { data } = await useFetch<Minter[]>('/api/minters/active')
+      const { data } = await useFetch<Account[]>('/api/accounts', {
+        query: { limit }
+      })
       console.log(data.value)
-      if (data.value) activeMinters.value = data.value
+      if (data.value) accounts.value = data.value
     } catch (error) {
       console.error('Failed to fetch active minters:', error)
     } finally {
-      loading.value.minters = false
+      loading.value.accounts = false
     }
   }
 
   return {
+    accounts,
     tokenMetrics,
     dailyMetrics,
     hourlyMetrics,
     recentTransfers,
-    activeMinters,
     loading,
+    fetchAccounts,
     fetchTokenMetrics,
     fetchDailyMetrics,
     fetchHourlyMetrics,
     fetchRecentTransfers,
-    fetchActiveMinters
   }
 } 
