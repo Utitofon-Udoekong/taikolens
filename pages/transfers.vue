@@ -72,7 +72,7 @@
                     {{ truncateHash(getArray(transfer.to)) }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {{ formatAmount(transfer.value) }}
+                    {{ formatCurrency(transfer.value) }}
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ formatDate(transfer.block_timestamp) }}

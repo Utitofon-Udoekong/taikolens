@@ -13,7 +13,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      contractAddress: process.env.CONTRACT_ADDRESS
+      contractAddress: process.env.CONTRACT_ADDRESS,
+      taikoscanApiKey: process.env.TAIKOSCAN_API_KEY
     }
   },
 })

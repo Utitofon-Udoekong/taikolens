@@ -1,5 +1,6 @@
 
 export const useTokenData = () => {
+  const runtimeConfig = useRuntimeConfig()
   const accounts = ref<Account[]>([])
   const tokenMetrics = ref<TokenMetric[]>([])
   const dailyMetrics = ref<DailyMetric[]>([])
@@ -10,21 +11,27 @@ export const useTokenData = () => {
     daily: false,
     hourly: false,
     transfers: false,
-    accounts: false
+    accounts: false,
+    blockRewards: false,
+    ethPrice: false,
+    ethSupply: false
   })
+  const blockRewards = ref<BlockReward[]>([])
+  const ethPrice = ref<EthPrice | null>(null)
+  const ethSupply = ref<string>('')
 
-  const fetchTokenMetrics = async () => {
-    loading.value.token = true
-    try {
-      const { data } = await useFetch<TokenMetric[]>('/api/token/metrics')
-      console.log(data.value)
-      if (data.value) tokenMetrics.value == data.value
-    } catch (error) {
-      console.error('Failed to fetch token metrics:', error)
-    } finally {
-      loading.value.token = false
-    }
-  }
+  /// TODO
+  // const fetchTokenMetrics = async () => {
+  //   loading.value.token = true
+  //   try {
+  //     const { data } = await useFetch<TokenMetric[]>('/api/token/metrics')
+  //     if (data.value) tokenMetrics.value == data.value
+  //   } catch (error) {
+  //     console.error('Failed to fetch token metrics:', error)
+  //   } finally {
+  //     loading.value.token = false
+  //   }
+  // }
 
   const fetchDailyMetrics = async (days = 30) => {
     loading.value.daily = true
@@ -32,7 +39,6 @@ export const useTokenData = () => {
       const { data } = await useFetch<DailyMetric[]>('/api/metrics/daily', {
         query: { days }
       })
-      console.log(data.value)
       if (data.value) dailyMetrics.value = data.value
     } catch (error) {
       console.error('Failed to fetch daily metrics:', error)
@@ -47,7 +53,6 @@ export const useTokenData = () => {
       const { data } = await useFetch<HourlyMetric[]>('/api/metrics/hourly', {
         query: { hours }
       })
-      console.log(data.value)
       if (data.value) hourlyMetrics.value = data.value
     } catch (error) {
       console.error('Failed to fetch hourly metrics:', error)
@@ -62,7 +67,6 @@ export const useTokenData = () => {
       const { data } = await useFetch<Transfer[]>('/api/transfers/recent', {
         query: { limit }
       })
-      console.log(data.value)
       if (data.value) recentTransfers.value = data.value
     } catch (error) {
       console.error('Failed to fetch recent transfers:', error)
@@ -86,6 +90,65 @@ export const useTokenData = () => {
     }
   }
 
+  const fetchTaikoScanData = async (module: string, action: string, params = {}) => {
+    try {
+      const { data } = await useFetch(`https://api.taikoscan.io/api`, {
+        params: {
+          module,
+          action,
+          apikey: runtimeConfig.public.taikoscanApiKey,
+          ...params
+        },
+        headers: {
+          'Accept': 'application/json',
+        }
+      })
+      console.log(data.value)
+      return data.value
+    } catch (error) {
+      console.error(`Failed to fetch ${module}/${action}:`, error)
+      return null
+    }
+  }
+
+  const fetchBlockReward = async (blockNo: string) => {
+    loading.value.blockRewards = true
+    try {
+      const data = await fetchTaikoScanData('block', 'getblockreward', {
+        blockno: blockNo
+      })
+      if (data?.result) {
+        blockRewards.value.push(data.result)
+      }
+    } finally {
+      loading.value.blockRewards = false
+    }
+  }
+
+  const fetchEthPrice = async () => {
+    loading.value.ethPrice = true
+    try {
+      const data = await fetchTaikoScanData('stats', 'ethprice')
+      if (data?.result) {
+        ethPrice.value = data.result
+      }
+    } finally {
+      loading.value.ethPrice = false
+    }
+  }
+
+  const fetchEthSupply = async () => {
+    loading.value.ethSupply = true
+    try {
+      const data = await fetchTaikoScanData('stats', 'ethsupply')
+      if (data?.result) {
+        ethSupply.value = data.result
+      }
+    } finally {
+      loading.value.ethSupply = false
+    }
+  }
+
   return {
     accounts,
     tokenMetrics,
@@ -93,10 +156,15 @@ export const useTokenData = () => {
     hourlyMetrics,
     recentTransfers,
     loading,
+    blockRewards,
+    ethPrice,
+    ethSupply,
     fetchAccounts,
-    fetchTokenMetrics,
     fetchDailyMetrics,
     fetchHourlyMetrics,
     fetchRecentTransfers,
+    fetchBlockReward,
+    fetchEthPrice,
+    fetchEthSupply,
   }
 } 

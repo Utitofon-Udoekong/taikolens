@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
       average_transfer_value: Number(metric.average_transfer_value),
       active_users: Number(metric.active_users),
     }))
-    console.table('metrics: ',jsonFormat(metrics))
     return jsonFormat(metrics)
   } catch (error) {
     throw createError({

@@ -49,6 +49,19 @@ export const getArray = (buffer: any) => {
     return ''
 }
 
+export interface BlockReward {
+    blockNumber: string;
+    timeStamp: string;
+    blockReward: string;
+}
+
+export interface EthPrice {
+    ethbtc: string;
+    ethbtc_timestamp: string;
+    ethusd: string;
+    ethusd_timestamp: string;
+}
+
 export interface TokenMetric {
     symbol: string
     name: string

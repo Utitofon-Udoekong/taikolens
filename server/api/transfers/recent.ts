@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
       block_timestamp: Number(transfer.block_timestamp),
       value: Number(transfer.value),
     }))
-    console.log('transfers: ',jsonFormat(transfers))
     return jsonFormat(transfers)
   } catch (error) {
     throw createError({

@@ -3,41 +3,28 @@
     <!-- Tab Navigation -->
     <div class="border-b border-gray-200">
       <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-        <button
-          v-for="tab in tabs"
-          :key="tab.name"
-          @click="currentTab = tab.id"
-          :class="[
-            currentTab === tab.id
-              ? 'border-blue-500 text-blue-600'
-              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-            'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
-          ]"
-        >
+        <button v-for="tab in tabs" :key="tab.name" @click="handleTabChanged(tab)" :class="[
+          currentTab === tab.id
+            ? 'border-blue-500 text-blue-600'
+            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+          'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium'
+        ]">
           {{ tab.name }}
         </button>
       </nav>
     </div>
 
     <!-- Daily Metrics View -->
-    <div v-if="currentTab === 'daily'">
+    <div v-if="currentTab === 'daily'" class="space-y-8">
       <!-- Existing Daily Charts -->
       <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Daily Volume Trends</h3>
-        <LineChart
-          :data="volumeChartData"
-          :options="volumeChartOptions"
-          class="h-[300px]"
-        />
+        <LineChart :data="dailyVolumeChartData" :options="dailyVolumeChartOptions" class="h-[300px]" />
       </div>
 
       <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Daily Transfer Activity</h3>
-        <BarChart
-          :data="transferChartData"
-          :options="transferChartOptions"
-          class="h-[300px]"
-        />
+        <BarChart :data="transferChartData" :options="transferChartOptions" class="h-[300px]" />
       </div>
 
       <!-- Existing Daily Metrics Table -->
@@ -83,54 +70,55 @@
     <!-- Hourly Metrics View -->
     <div v-else-if="currentTab === 'hourly'" class="space-y-8">
       <!-- 24h Activity Heatmap -->
-      <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
+      <!-- <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">24h Activity Heatmap</h3>
         <HeatMap
           :data="hourlyHeatmapData"
           :options="heatmapOptions"
           class="h-[300px]"
         />
-      </div>
+      </div> -->
 
       <!-- Hourly Active Users -->
-      <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
+      <!-- <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Hourly Active Users</h3>
         <LineChart
           :data="hourlyUsersChartData"
           :options="hourlyUsersOptions"
           class="h-[300px]"
         />
-      </div>
+      </div> -->
 
       <!-- Hourly Volume -->
       <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Hourly Volume</h3>
-        <BarChart
-          :data="hourlyVolumeChartData"
-          :options="hourlyVolumeOptions"
-          class="h-[300px]"
-        />
+        <LineChart :data="hourlydailyVolumeChartData" :options="hourlyVolumeOptions" class="h-[300px]" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Line as LineChart, Bar as BarChart, HeatMap } from 'vue-chartjs'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js'
-import type { DailyMetric, HourlyMetric } from '~/utils'
-import { formatCurrency, formatAmount } from '~/utils'
+import { Line as LineChart, Bar as BarChart } from 'vue-chartjs'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler } from 'chart.js'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler)
 
+interface Tab {
+  id: string;
+  name: string;
+}
 const props = defineProps<{
   dailyMetrics: DailyMetric[]
   hourlyMetrics: HourlyMetric[]
 }>()
 
+const emit = defineEmits<{
+  tabChanged: [value: string]
+}>()
+
 const currentTab = ref('daily')
-const tabs = [
+const tabs: Tab[] = [
   { id: 'daily', name: 'Daily Metrics' },
   { id: 'hourly', name: 'Hourly Metrics' }
 ]
@@ -140,38 +128,44 @@ const sortedDailyMetrics = computed(() => {
 })
 
 // Volume Chart Data
-const volumeChartData = computed(() => ({
+const dailyVolumeChartData = computed(() => ({
   labels: props.dailyMetrics.map(m => new Date(m.date).toLocaleDateString()),
   datasets: [
     {
-      label: 'Total Volume',
+      label: 'Total Daily Volume',
       data: props.dailyMetrics.map(m => m.volume),
+      backgroundColor: '#3b82f64e',
       borderColor: '#3b82f6',
-      tension: 0.1
+      fill: true,
+      tension: 0.1,
     },
     {
       label: 'Mint Volume',
       data: props.dailyMetrics.map(m => m.mint_volume),
+      backgroundColor: '#22c55e4e',
       borderColor: '#22c55e',
-      tension: 0.1
+      fill: true,
+      tension: 0.1,
     },
     {
       label: 'Burn Volume',
       data: props.dailyMetrics.map(m => m.burn_volume),
+      backgroundColor: '#ef44444e',
       borderColor: '#ef4444',
-      tension: 0.1
+      fill: true,
+      tension: 0.1,
     }
   ]
 }))
 
-const volumeChartOptions = {
+const dailyVolumeChartOptions = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   scales: {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: function(tickValue: number | string) {
+        callback: function (tickValue: number | string) {
           return formatCurrency(Number(tickValue))
         }
       }
@@ -184,7 +178,10 @@ const volumeChartOptions = {
           return `${context.dataset.label}: ${formatCurrency(context.raw)}`
         }
       }
-    }
+    },
+    // interaction: {
+    //   intersect: false,
+    // }
   }
 }
 
@@ -200,12 +197,12 @@ const transferChartData = computed(() => ({
 
 const transferChartOptions = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   scales: {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: function(tickValue: number | string) {
+        callback: function (tickValue: number | string) {
           return formatAmount(Number(tickValue))
         }
       }
@@ -222,88 +219,99 @@ const transferChartOptions = {
   }
 }
 
-// Hourly Metrics Computeds
-const hourlyHeatmapData = computed(() => {
-  const hours = Array.from({ length: 24 }, (_, i) => i)
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-  
-  return {
-    labels: hours,
-    datasets: days.map(day => ({
-      label: day,
-      data: hours.map(hour => {
-        const metrics = props.hourlyMetrics.filter(m => {
-          const date = new Date(m.hour)
-          return date.getDay() === days.indexOf(day) && date.getHours() === hour
-        })
-        return metrics.reduce((sum, m) => sum + m.transfer_count, 0)
-      })
-    }))
-  }
-})
-
-const hourlyUsersChartData = computed(() => ({
-  labels: props.hourlyMetrics.map(m => new Date(m.hour).toLocaleTimeString()),
-  datasets: [{
-    label: 'Active Users',
-    data: props.hourlyMetrics.map(m => m.active_users),
-    borderColor: '#3b82f6',
-    tension: 0.1
-  }]
-}))
-
-const hourlyVolumeChartData = computed(() => ({
-  labels: props.hourlyMetrics.map(m => new Date(m.hour).toLocaleTimeString()),
-  datasets: [{
-    label: 'Volume',
-    data: props.hourlyMetrics.map(m => m.volume),
-    backgroundColor: '#3b82f6'
-  }]
+const hourlydailyVolumeChartData = computed(() => ({
+  labels: props.hourlyMetrics.map(m => new Date(m.hour + ":00:00").toLocaleTimeString()),
+  datasets: [
+    {
+      label: 'Volume',
+      data: props.hourlyMetrics.map(m => m.volume),
+      backgroundColor: '#3b82f64e',
+      borderColor: '#3b82f6',
+      fill: true,
+      tension: 0.1,
+    },
+    {
+      label: 'Average Hourly Transfers',
+      data: props.hourlyMetrics.map(m => m.average_transfer_value),
+      backgroundColor: '#22c55e4e',
+      borderColor: '#22c55e',
+      fill: true,
+      tension: 0.1,
+    },
+    {
+      label: 'Transfer Count',
+      data: props.hourlyMetrics.map(m => m.transfer_count),
+      backgroundColor: '#ef44444e',
+      borderColor: '#ef4444',
+      fill: true,
+      tension: 0.1,
+    },
+  ]
 }))
 
 // Hourly Chart Options
-const heatmapOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    tooltip: {
-      callbacks: {
-        label: (context: any) => `Transfers: ${formatAmount(context.raw)}`
-      }
-    }
-  }
-}
+// const heatmapOptions = {
+//   responsive: true,
+//   maintainAspectRatio: false,
+//   plugins: {
+//     tooltip: {
+//       callbacks: {
+//         label: (context: any) => `Transfers: ${formatAmount(context.raw)}`
+//       }
+//     }
+//   }
+// }
 
-const hourlyUsersOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    y: {
-      beginAtZero: true,
-      ticks: {
-        callback: (value: number) => formatAmount(value)
-      }
-    }
-  }
-}
+// const hourlyUsersOptions = {
+//   responsive: true,
+//   maintainAspectRatio: true,
+//   scales: {
+//     y: {
+//       beginAtZero: true,
+//       ticks: {
+//         callback: function (tickValue: string | number) {
+//           return formatAmount(Number(tickValue))
+//         }
+//       }
+//     }
+//   }
+// }
 
 const hourlyVolumeOptions = {
   responsive: true,
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   scales: {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value: number) => formatCurrency(value)
+        callback: function (tickValue: number | string) {
+          return formatCurrency(Number(tickValue))
+        }
       }
     }
   },
   plugins: {
     tooltip: {
       callbacks: {
-        label: (context: any) => `Volume: ${formatCurrency(context.raw)}`
+        label: (context: any) => {
+          switch (context.dataset.label) {
+            case 'Volume':
+              return `${context.dataset.label}: ${formatCurrency(context.raw)}`
+            case 'Average Hourly Transfers':
+              return `${context.dataset.label}: ${formatCurrency(context.raw)}`
+            case 'Transfer Count':
+              return `${context.dataset.label}: ${context.raw}`
+            default:
+              return `${context.dataset.label}: ${context.raw}`
+          }
+        }
       }
     }
   }
+}
+
+const handleTabChanged = (tab: Tab) => {
+  currentTab.value = tab.id
+  emit('tabChanged', tab.id)
 }
 </script>

@@ -1,75 +1,40 @@
-# Nuxt Minimal Starter
+# USDT Taiko Analytics Dashboard
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A comprehensive analytics dashboard for monitoring USDT activity on the Taiko network. This project provides real-time insights into token transfers, volume metrics, and network activity.
 
-## Setup
+## Features
 
-Make sure to install dependencies:
+- **Real-time Metrics**
+  - 24h Volume and Transfer Count
+  - Active Users Analytics
+  - ETH Price Integration
+  - Historical Volume Trends
 
-```bash
-# npm
-npm install
+- **Detailed Analytics**
+  - Daily and Hourly Metrics
+  - Transfer History
+  - Account Activity
+  - Block Rewards
+  - Network Statistics
 
-# pnpm
-pnpm install
+- **Interactive Visualizations**
+  - Volume Trend Charts
+  - Transfer Activity Graphs
+  - Price Movement Tracking
+  - User Activity Heatmaps
 
-# yarn
-yarn install
+## Technology Stack
 
-# bun
-bun install
-```
+- **Frontend**: Vue.js with Nuxt 3
+- **Styling**: TailwindCSS
+- **Charts**: Chart.js with Vue-ChartJS
+- **Data**: Integration with TaikoScan API
+- **State Management**: Pinia
+- **Database**: Prisma
 
-## Development Server
+## Getting Started
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
+1. Clone the repository:
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+git clone https://github.com/yourusername/usdt-taiko-
