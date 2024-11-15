@@ -14,8 +14,8 @@
                     <div class="overflow-hidden">
                         <dt class="text-sm font-medium text-gray-500 truncate">Address</dt>
                         <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                            <NuxtLink :external="true" class="hover:text-pink-500"
-                                :to="`https://taikoscan.io/token/${runtimeConfig.public.contractAddress}`">{{
+                            <NuxtLink :external="true" target="_blank" class="hover:text-pink-500"
+                                :href="`https://taikoscan.io/token/${runtimeConfig.public.contractAddress}`">{{
                                     truncateHash(runtimeConfig.public.contractAddress) }}</NuxtLink>
                         </dd>
                     </div>
@@ -80,13 +80,12 @@
                             <Loader class="mx-auto p-4" v-if="loading.accounts" :loading="loading.accounts" />
                             <tbody v-else class="divide-y divide-gray-200 bg-white">
                                 <!-- Render accounts if data exists -->
-                                <tr v-if="accounts.length > 0"
-                                    v-for="(account, index) in accounts" :key="index">
+                                <tr v-if="accounts.length > 0" v-for="(account, index) in accounts" :key="index">
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm">
-                                        <a :href="`https://taikoscan.io/address/${getArray(account.id)}`"
-                                            target="_blank" class="text-pink-600 hover:text-pink-900">
+                                        <NuxtLink :href="`https://taikoscan.io/address/${getArray(account.id)}`"
+                                            :external="true" target="_blank" class="text-pink-600 hover:text-pink-900">
                                             {{ truncateHash(getArray(account.id)) }}
-                                        </a>
+                                        </NuxtLink>
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-black">
                                         {{ formatAmount(account.balance) }} USDT
@@ -120,7 +119,7 @@ const {
     tokenMetrics,
     tokenSupply,
     loading,
-    accounts, 
+    accounts,
     fetchAccounts,
     fetchTokenMetrics,
     fetchTokenSupply

@@ -134,10 +134,10 @@
               <!-- Display recent transfers if available -->
               <tr v-if="recentTransfers.length > 0" v-for="transfer in recentTransfers.slice(0, 5)" :key="getArray(transfer.id)">
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
-                  <a :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`" target="_blank"
+                  <NuxtLink :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`" :external="true" target="_blank"
                     class="text-pink-600 hover:text-pink-900">
                     {{ truncateHash(getArray(transfer.transaction_hash)) }}
-                  </a>
+                  </NuxtLink>
                 </td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-right">
                   {{ formatCurrency(transfer.value) }}

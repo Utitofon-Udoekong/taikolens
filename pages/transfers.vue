@@ -74,17 +74,16 @@
                 <tr v-if="(filteredTransfers?.length || 0) > 0" v-for="transfer, index in filteredTransfers"
                   :key="index">
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm">
-                    <a :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`" target="_blank"
+                    <NuxtLink :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`" :external="true" target="_blank"
                       class="text-pink-600 hover:text-pink-900">
                       {{ truncateHash(getArray(transfer.transaction_hash)) }}
-                    </a>
+                    </NuxtLink>
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <a :href="`https://taikoscan.io/block/${transfer.block_number}`" target="_blank"
+                    <NuxtLink :href="`https://taikoscan.io/block/${transfer.block_number}`" :external="true" target="_blank"
                       class="text-pink-600 hover:text-pink-900">
                       {{ transfer.block_number }}
-                    </a>
-                    <!-- {{ transfer.block_number }} -->
+                    </NuxtLink>
                   </td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {{ truncateHash(getArray(transfer.from)) }}
