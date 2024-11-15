@@ -135,6 +135,9 @@ export const useTokenData = () => {
       if (data?.result) {
         blockRewards.value.push(data.result)
       }
+    }catch (error) {
+      console.error(`Failed to fetch block reward`)
+      return null
     } finally {
       loading.value.blockRewards = false
     }
@@ -147,7 +150,10 @@ export const useTokenData = () => {
       if (data?.result) {
         ethPrice.value = data.result
       }
-    } finally {
+    } catch (error) {
+      console.error('Failed to fetch eth price')
+      return null
+    }finally {
       loading.value.ethPrice = false
     }
   }
@@ -158,11 +164,13 @@ export const useTokenData = () => {
       const data = await fetchTaikoScanData('stats', 'tokensupply', {
         contractaddress: runtimeConfig.public.contractAddress
       })
-      console.log(data)
       if (data?.result) {
         usdtSupply.value = data.result
       }
-    } finally {
+    } catch (error) {
+      console.error('Failed to fetch usdt supply')
+      return null
+    }finally {
       loading.value.usdtSupply = false
     }
   }

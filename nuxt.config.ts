@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@prisma/nuxt'],
   app: {
     head: {
-      title: 'USDT Taiko Analytics',
+      title: 'TaikoLens',
       meta: [
         { name: 'description', content: 'Real-time analytics dashboard for USDT on Taiko network' }
       ],

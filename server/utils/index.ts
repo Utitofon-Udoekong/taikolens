@@ -1,9 +1,11 @@
+// Formats a parameter as JSON, converting BigInt values to strings to ensure compatibility with JSON.stringify.
 export const jsonFormat = (param: any): any => {
     return JSON.parse(JSON.stringify(
         param,
         (_, value) => (typeof value === "bigint" ? value.toString() : value)
     ));
 };
+
 export interface TokenMetric {
     symbol: string
     name: string

@@ -19,6 +19,8 @@ export default defineEventHandler(async (event) => {
         last_transaction_timestamp: true,
         is_minter: true,
         gs_chain: true,
+        gs_gid: false,
+        vid: false
       }
     })).map(account => ({
       ...account,

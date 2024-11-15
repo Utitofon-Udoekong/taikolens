@@ -1,67 +1,80 @@
+// Formats a gas value as a localized integer with commas.
 export const formatGas = (gas: string) => {
-    return parseInt(gas).toLocaleString()
+    return parseInt(gas).toLocaleString();
 }
 
+// Converts a timestamp (in seconds) to a readable date string in local format.
 export const formatTime = (timestamp: string) => {
-    return new Date(parseInt(timestamp) * 1000).toLocaleString()
+    return new Date(parseInt(timestamp) * 1000).toLocaleString();
 }
 
+// Formats a number as USD currency with no decimal places, using US locale.
 export const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
-    }).format(value)
+    }).format(value);
 }
 
+// Abbreviates large numbers with 'K' for thousands, 'M' for millions, and 'B' for billions.
 function abbrvNumber(num: number) {
     if (num >= 1e9) {
-      return (num / 1e9).toFixed(2) + 'B';
+        return (num / 1e9).toFixed(2) + 'B';
     } else if (num >= 1e6) {
-      return (num / 1e6).toFixed(2) + 'M';
+        return (num / 1e6).toFixed(2) + 'M';
     } else if (num >= 1e3) {
-      return (num / 1e3).toFixed(2) + 'K';
+        return (num / 1e3).toFixed(2) + 'K';
     } else {
-      return num.toLocaleString();
+        return num.toLocaleString();
     }
-  }
+}
+
+// Formats a number with optional abbreviation. If `truncate` is true, abbreviates the number.
 export const formatNumber = (value: string, truncate?: boolean) => {
-    if(truncate){
-        return abbrvNumber(parseInt(value))
+    if (truncate) {
+        return abbrvNumber(parseInt(value));
     }
-    return parseInt(value).toLocaleString()
+    return parseInt(value).toLocaleString();
 }
 
+// Converts a string value of Wei to Ether, formatted to two decimal places.
 export const formatEther = (value: string) => {
-    return (parseInt(value) / 1e18).toFixed(2)
+    return (parseInt(value) / 1e18).toFixed(2);
 }
 
+// Converts a string value of Gwei to Ether, formatted to two decimal places.
 export const formatGwei = (value: string) => {
-    return (parseInt(value) / 1e9).toFixed(2)
+    return (parseInt(value) / 1e9).toFixed(2);
 }
 
-
+// Formats an amount as a localized number with up to two decimal places.
 export const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
         maximumFractionDigits: 2
-    }).format(amount)
+    }).format(amount);
 }
 
+// Formats a date from a timestamp or Date object to a readable local date string.
 export const formatDate = (timestamp: string | number | Date) => {
-    return new Date(timestamp).toLocaleString()
-}
-export const truncateHash = (hash: string) => {
-    return `${hash.slice(0, 6)}...${hash.slice(-4)}`
+    return new Date(timestamp).toLocaleString();
 }
 
-export const getArray = (buffer: any) => {
-    if (!buffer) return ''
-    if (buffer.type === 'Buffer') {
-        return '0x' + buffer.data.map((x: number) => x.toString(16).padStart(2, '0')).join('')
-    }
-    return ''
+// Truncates a hash string, showing the first 6 and last 4 characters with "..." in between.
+export const truncateHash = (hash: string) => {
+    return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
 }
+
+// Converts a Buffer object to a hexadecimal string, prepending "0x" for readability.
+export const getArray = (buffer: any) => {
+    if (!buffer) return '';
+    if (buffer.type === 'Buffer') {
+        return '0x' + buffer.data.map((x: number) => x.toString(16).padStart(2, '0')).join('');
+    }
+    return '';
+}
+
 
 export interface BlockReward {
     blockNumber: string;

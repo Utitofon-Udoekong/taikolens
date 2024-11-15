@@ -10,8 +10,9 @@
     </div>
 
     <!-- Key Metrics Cards -->
-    <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+    <!-- Data on daily volume -->
+    <div class="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      <!-- <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
             <div class="flex-shrink-0">
@@ -30,8 +31,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
+      <!-- Data on daily transfers -->
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
@@ -42,7 +44,9 @@
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">24h Transfers</dt>
                 <dd class="flex items-baseline">
+                  <!-- Loader while fetching data -->
                   <Loader v-if="loading.daily" :loading="loading.daily" />
+                  <!-- Display 24h Transfers or Loader -->
                   <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatAmount(last24hTransfers) }}
                   </div>
@@ -53,6 +57,7 @@
         </div>
       </div>
 
+      <!-- Data on active users -->
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
@@ -63,7 +68,9 @@
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">Active Users</dt>
                 <dd class="flex items-baseline">
+                  <!-- Loader while fetching data -->
                   <Loader v-if="loading.daily" :loading="loading.daily" />
+                  <!-- Display Active Users or Loader -->
                   <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatAmount(activeUsers) }}
                   </div>
@@ -74,6 +81,7 @@
         </div>
       </div>
 
+      <!-- ETH Price data -->
       <div class="bg-white overflow-hidden shadow rounded-lg">
         <div class="p-5">
           <div class="flex items-center">
@@ -84,7 +92,9 @@
               <dl>
                 <dt class="text-sm font-medium text-gray-500 truncate">ETH Price</dt>
                 <dd class="flex items-baseline">
+                  <!-- Loader while fetching data -->
                   <Loader v-if="loading.ethPrice" :loading="loading.ethPrice" />
+                  <!-- Display ETH Price or Loader -->
                   <div v-else class="text-2xl font-semibold text-gray-900">
                     {{ formatCurrency(Number(ethPrice?.ethusd || 0)) }}
                   </div>
@@ -100,14 +110,18 @@
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
       <div class="bg-white shadow rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Volume Trend</h3>
+        <!-- Loader while fetching data -->
         <Loader v-if="loading.daily" :loading="loading.daily" />
+        <!-- LineChart component for volume data -->
         <LineChart v-else :data="volumeChartData" :options="chartOptions" class="h-[300px]" />
       </div>
 
       <div class="bg-white shadow rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Transfers</h3>
         <div class="overflow-x-auto">
+          <!-- Loader while fetching data -->
           <Loader v-if="loading.transfers" :loading="loading.transfers" />
+          <!-- Table displaying recent transfer data -->
           <table v-else class="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
@@ -117,9 +131,10 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-              <tr v-for="transfer in recentTransfers.slice(0, 5)" :key="getArray(transfer.id)">
+              <!-- Display recent transfers if available -->
+              <tr v-if="recentTransfers.length > 0" v-for="transfer in recentTransfers.slice(0, 5)" :key="getArray(transfer.id)">
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
-                  <a :href="`https://explorer.test.taiko.xyz/tx/${getArray(transfer.transaction_hash)}`" target="_blank"
+                  <a :href="`https://taikoscan.io/tx/${getArray(transfer.transaction_hash)}`" target="_blank"
                     class="text-pink-600 hover:text-pink-900">
                     {{ truncateHash(getArray(transfer.transaction_hash)) }}
                   </a>
@@ -131,6 +146,8 @@
                   {{ formatDate(transfer.block_timestamp) }}
                 </td>
               </tr>
+              <!-- Message if no transfers are available -->
+              <p v-else class="text-center p-2 text-gray-500">No data available</p>
             </tbody>
           </table>
         </div>
@@ -145,10 +162,10 @@
 </template>
 
 <script setup lang="ts">
-// import { CurrencyDollarIcon, ArrowsRightLeftIcon, UsersIcon, ChartBarIcon } from '@heroicons/vue/24/outline'
 import { Line as LineChart } from 'vue-chartjs'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
 
+// Register necessary Chart.js components for the line chart
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
 const {
@@ -162,34 +179,38 @@ const {
 } = useTokenData()
 
 // Computed metrics
+// Get 24-hour volume from dailyMetrics
 const last24hVolume = computed(() => {
   if (!dailyMetrics.value.length) return 0
   return dailyMetrics.value[0].volume
 })
 
+// Get 24-hour transfer count from dailyMetrics
 const last24hTransfers = computed(() => {
   if (!dailyMetrics.value.length) return 0
   return dailyMetrics.value[0].transfer_count
 })
 
+// Get average active users from dailyMetrics
 const activeUsers = computed(() => {
   if (!dailyMetrics.value.length) return 0
   return Math.round(dailyMetrics.value.reduce((acc, curr) => acc + curr.transfer_count, 0) / dailyMetrics.value.length)
 })
 
-// Chart data
+// Chart data configuration
 const volumeChartData = computed(() => ({
-  labels: dailyMetrics.value.map(m => new Date(m.date).toLocaleDateString()),
+  labels: dailyMetrics.value.map(m => new Date(m.date).toLocaleTimeString()),  
   datasets: [{
     label: 'Volume',
     data: dailyMetrics.value.map(m => m.volume),
-    borderColor: '#3b82f6',
-    backgroundColor: '#3b82f64d',
-    fill: true,
-    tension: 0.1
+    borderColor: '#ec4899',  
+    backgroundColor: '#ec48994d', 
+    fill: true,  
+    tension: 0.4,  
   }]
 }))
 
+// Chart options
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: true,
@@ -212,7 +233,9 @@ const chartOptions = {
 
 const watchInterval = ref<NodeJS.Timeout>()
 
-onBeforeRouteLeave(() => clearInterval(watchInterval.value))
+onUnmounted(() => {
+  clearInterval(watchInterval.value)
+})
 
 onNuxtReady(async() => {
 
