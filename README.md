@@ -92,9 +92,6 @@ package.json
         ├── [metrics]
             ├── daily.get.ts
             └── hourly.get.ts
-        ├── [minters]
-            ├── active.get.ts
-            └── all.ts
         ├── [token]
             └── metrics.ts
         └── [transfers]

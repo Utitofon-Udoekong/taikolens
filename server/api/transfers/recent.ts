@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -15,7 +13,6 @@ export default defineEventHandler(async (event) => {
       },
       select: {
         block_number: true,
-        block_range: true,
         block_timestamp: true,
         from: true,
         id: true,
@@ -25,8 +22,6 @@ export default defineEventHandler(async (event) => {
         transaction_hash: true,
         value: true,
         gs_chain: true,
-        vid: false,
-        gs_gid: false,
       }
     })).map(transfer => ({
       ...transfer,

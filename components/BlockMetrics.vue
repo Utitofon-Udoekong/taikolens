@@ -32,7 +32,7 @@
         <Loader v-if="loadingSupply" :loading="loadingSupply" />
         <!-- Display the total USDT supply, abbreviated if large -->
         <dd v-else class="mt-1 text-3xl font-semibold text-gray-900">
-          {{ formatNumber(usdtSupply || '0', true) }} USDT
+          {{ formatNumber(tokenSupply || '0', true) }} USDT
         </dd>
       </div>
     </dl>
@@ -44,13 +44,13 @@
 /**
  * Props:
  * - `latestBlockReward`: Contains the latest block's number and reward (or null if unavailable).
- * - `usdtSupply`: Total USDT supply as a string.
+ * - `tokenSupply`: Total USDT supply as a string.
  * - `loadingRewards`: Indicates whether the block reward data is loading.
  * - `loadingSupply`: Indicates whether the USDT supply data is loading.
  */
 defineProps<{
   latestBlockReward: { blockNumber: string; blockReward: string } | null,
-  usdtSupply: string,
+  tokenSupply: string,
   loadingRewards: boolean,
   loadingSupply: boolean
 }>()

@@ -179,12 +179,6 @@ const {
 } = useTokenData()
 
 // Computed metrics
-// Get 24-hour volume from dailyMetrics
-const last24hVolume = computed(() => {
-  if (!dailyMetrics.value.length) return 0
-  return dailyMetrics.value[0].volume
-})
-
 // Get 24-hour transfer count from dailyMetrics
 const last24hTransfers = computed(() => {
   if (!dailyMetrics.value.length) return 0
@@ -238,7 +232,6 @@ onUnmounted(() => {
 })
 
 onNuxtReady(async() => {
-
   await Promise.all([
     fetchRecentTransfers(5),
     fetchDailyMetrics(7),

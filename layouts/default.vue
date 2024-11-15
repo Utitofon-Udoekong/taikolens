@@ -33,9 +33,9 @@
 <script setup lang="ts">
 const navigation = [
     { name: 'Overview', path: '/' },
-    { name: 'Accounts', path: '/account' },
     { name: 'Transfers', path: '/transfers' },
-    { name: 'Metrics', path: '/metrics' }
+    { name: 'Network Metrics', path: '/metrics/network' },
+    { name: 'Token Metrics', path: '/metrics/token' },
 ]
 </script>
 

@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "stg": "nuxt build && node .output/server/index.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -20,17 +21,15 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.2",
-    "@pinia/nuxt": "^0.7.0",
     "@prisma/nuxt": "^0.0.35",
     "chart.js": "^4.4.6",
     "nuxt": "^3.14.159",
+    "prisma": "5.22.0",
     "vue": "latest",
     "vue-chartjs": "^5.3.2",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@prisma/client": "5.22.0",
-    "prisma": "5.22.0"
-  },
-  "packageManager": "pnpm@9.13.2"
+    "@prisma/client": "^5.22.0"
+  }
 }

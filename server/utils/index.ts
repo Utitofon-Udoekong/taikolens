@@ -7,18 +7,19 @@ export const jsonFormat = (param: any): any => {
 };
 
 export interface TokenMetric {
-    symbol: string
-    name: string
-    decimals: number
-    total_supply: number
-    transfer_count: number
-    holder_count: number
-    last_update_timestamp: number
-    owner: string
+    last_update_timestamp: string;
+    decimals:              number;
+    holder_count:          string;
+    id:                    Buffer;
+    symbol:                string;
+    name:                  string;
+    owner:                 Buffer;
+    total_supply:          string;
+    transfer_count:        string;
+    gs_chain:              string;
 }
 
 export interface DailyMetric {
-    block_range: string
     id: Buffer
     date: string
     transfer_count: number
@@ -31,7 +32,6 @@ export interface DailyMetric {
 }
 
 export interface HourlyMetric {
-    block_range: string
     id: Buffer
     transfer_count: number
     active_users: number
@@ -45,7 +45,6 @@ export interface HourlyMetric {
 
 export interface Account {
     balance: number;
-    block_range: string;
     id: Buffer;
     last_transaction_timestamp: number;
     is_minter: boolean;
@@ -54,7 +53,6 @@ export interface Account {
 
 export interface Transfer {
     block_number: number;
-    block_range: string;
     block_timestamp: number;
     from: Buffer;
     id: Buffer;

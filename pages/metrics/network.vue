@@ -13,7 +13,7 @@
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2 ">
       <!-- Block Metrics Component -->
       <BlockMetrics :loadingRewards="loading.blockRewards" :latest-block-reward="latestBlockReward"
-        :usdt-supply="usdtSupply" :loading-supply="loading.usdtSupply" />
+        :token-supply="tokenSupply" :loading-supply="loading.tokenSupply" />
       <!-- Price Metrics Component -->
       <PriceMetrics :loading="loading.ethPrice" :eth-price="ethPrice" />
     </div>
@@ -48,18 +48,19 @@
 </template>
 
 <script setup lang="ts">
+
 const {
   dailyMetrics,
   hourlyMetrics,
   blockRewards,
   ethPrice,
-  usdtSupply,
+  tokenSupply,
   loading,
   fetchDailyMetrics,
   fetchHourlyMetrics,
   fetchBlockReward,
   fetchEthPrice,
-  fetchUSDTSupply
+  fetchTokenSupply
 } = useTokenData()
 
 // Compute the latest block reward from blockRewards array
@@ -107,7 +108,7 @@ onNuxtReady(async () => {
     fetchDailyMetrics(dailyPageSize.value),
     fetchHourlyMetrics(hourlyPageSize.value),
     fetchEthPrice(),
-    fetchUSDTSupply(),
+    fetchTokenSupply(),
     fetchBlockReward(Math.floor(new Date().getTime() / 1000))
   ])
 
@@ -116,7 +117,7 @@ onNuxtReady(async () => {
       fetchDailyMetrics(dailyPageSize.value),
       fetchHourlyMetrics(hourlyPageSize.value),
       fetchEthPrice(),
-      fetchUSDTSupply(),
+      fetchTokenSupply(),
       fetchBlockReward(Math.floor(new Date(dailyMetrics.value[0].date).getTime() / 1000))
     ])
   }, 20000);  // Refresh every 20 seconds

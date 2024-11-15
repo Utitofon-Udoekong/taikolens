@@ -2,7 +2,7 @@
 export const useTokenData = () => {
   const runtimeConfig = useRuntimeConfig()
   const accounts = ref<Account[]>([])
-  const tokenMetrics = ref<TokenMetric[]>([])
+  const tokenMetrics = ref<TokenMetric | null>(null)
   const dailyMetrics = ref<DailyMetric[]>([])
   const hourlyMetrics = ref<HourlyMetric[]>([])
   const recentTransfers = ref<Transfer[]>([])
@@ -14,24 +14,26 @@ export const useTokenData = () => {
     accounts: false,
     blockRewards: false,
     ethPrice: false,
-    usdtSupply: false
+    tokenSupply: false
   })
   const blockRewards = ref<BlockReward[]>([])
   const ethPrice = ref<EthPrice | null>(null)
-  const usdtSupply = ref<string>('')
+  const tokenSupply = ref<string>('')
 
-  /// TODO
-  // const fetchTokenMetrics = async () => {
-  //   loading.value.token = true
-  //   try {
-  //     const { data } = await useFetch<TokenMetric[]>('/api/token/metrics')
-  //     if (data.value) tokenMetrics.value == data.value
-  //   } catch (error) {
-  //     console.error('Failed to fetch token metrics:', error)
-  //   } finally {
-  //     loading.value.token = false
-  //   }
-  // }
+  const fetchTokenMetrics = async () => {
+    loading.value.token = true
+    try {
+      const { data } = await useFetch<TokenMetric>('/api/token/metrics')
+      if (data.value) {
+        tokenMetrics.value = data.value
+        console.log(tokenMetrics.value)
+      }
+    } catch (error) {
+      console.error('Failed to fetch token metrics:', error)
+    } finally {
+      loading.value.token = false
+    }
+  }
 
   const fetchDailyMetrics = async (days = 30) => {
     loading.value.daily = true
@@ -158,20 +160,20 @@ export const useTokenData = () => {
     }
   }
 
-  const fetchUSDTSupply = async () => {
-    loading.value.usdtSupply = true
+  const fetchTokenSupply = async () => {
+    loading.value.tokenSupply = true
     try {
       const data = await fetchTaikoScanData('stats', 'tokensupply', {
         contractaddress: runtimeConfig.public.contractAddress
       })
       if (data?.result) {
-        usdtSupply.value = data.result
+        tokenSupply.value = data.result
       }
     } catch (error) {
       console.error('Failed to fetch usdt supply')
       return null
     }finally {
-      loading.value.usdtSupply = false
+      loading.value.tokenSupply = false
     }
   }
 
@@ -184,13 +186,14 @@ export const useTokenData = () => {
     loading,
     blockRewards,
     ethPrice,
-    usdtSupply,
+    tokenSupply,
     fetchAccounts,
     fetchDailyMetrics,
     fetchHourlyMetrics,
     fetchRecentTransfers,
     fetchBlockReward,
     fetchEthPrice,
-    fetchUSDTSupply,
+    fetchTokenSupply,
+    fetchTokenMetrics
   }
 } 

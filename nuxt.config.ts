@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@prisma/nuxt'],
+  modules: ['@nuxtjs/tailwindcss', '@prisma/nuxt'],
   app: {
     head: {
       title: 'TaikoLens',
@@ -16,5 +16,12 @@ export default defineNuxtConfig({
       contractAddress: process.env.CONTRACT_ADDRESS,
       taikoscanApiKey: process.env.TAIKOSCAN_API_KEY
     }
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
+      },
+    },
   },
 })
