@@ -14,11 +14,11 @@ export const useTokenData = () => {
     accounts: false,
     blockRewards: false,
     ethPrice: false,
-    ethSupply: false
+    usdtSupply: false
   })
   const blockRewards = ref<BlockReward[]>([])
   const ethPrice = ref<EthPrice | null>(null)
-  const ethSupply = ref<string>('')
+  const usdtSupply = ref<string>('')
 
   /// TODO
   // const fetchTokenMetrics = async () => {
@@ -81,7 +81,6 @@ export const useTokenData = () => {
       const { data } = await useFetch<Account[]>('/api/accounts', {
         query: { limit }
       })
-      console.log(data.value)
       if (data.value) accounts.value = data.value
     } catch (error) {
       console.error('Failed to fetch active minters:', error)
@@ -110,7 +109,7 @@ export const useTokenData = () => {
     }
   }
 
-  const fetchBlockNoByTimestamp = async (timestamp: string) => {
+  const fetchBlockNoByTimestamp = async (timestamp: number) => {
     try {
       const data = await fetchTaikoScanData('block', 'getblocknobytime', {
         timestamp: timestamp,
@@ -119,17 +118,17 @@ export const useTokenData = () => {
       if(data?.result){
         return data?.result
       }
+      return null
     } catch (error) {
       console.error(`Failed to fetch getblocknobytime:`, timestamp)
       return null
     }
   }
 
-  const fetchBlockReward = async (timeStamp: string) => {
+  const fetchBlockReward = async (timeStamp: number) => {
     loading.value.blockRewards = true
     try {
       const blockNo = await fetchBlockNoByTimestamp(timeStamp)
-      console.log(blockNo)
       const data = await fetchTaikoScanData('block', 'getblockreward', {
         blockno: blockNo
       })
@@ -153,15 +152,18 @@ export const useTokenData = () => {
     }
   }
 
-  const fetchEthSupply = async () => {
-    loading.value.ethSupply = true
+  const fetchUSDTSupply = async () => {
+    loading.value.usdtSupply = true
     try {
-      const data = await fetchTaikoScanData('stats', 'ethsupply')
+      const data = await fetchTaikoScanData('stats', 'tokensupply', {
+        contractaddress: runtimeConfig.public.contractAddress
+      })
+      console.log(data)
       if (data?.result) {
-        ethSupply.value = data.result
+        usdtSupply.value = data.result
       }
     } finally {
-      loading.value.ethSupply = false
+      loading.value.usdtSupply = false
     }
   }
 
@@ -174,13 +176,13 @@ export const useTokenData = () => {
     loading,
     blockRewards,
     ethPrice,
-    ethSupply,
+    usdtSupply,
     fetchAccounts,
     fetchDailyMetrics,
     fetchHourlyMetrics,
     fetchRecentTransfers,
     fetchBlockReward,
     fetchEthPrice,
-    fetchEthSupply,
+    fetchUSDTSupply,
   }
 } 

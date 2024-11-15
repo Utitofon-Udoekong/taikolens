@@ -132,7 +132,7 @@ const filteredAccounts = computed(() => {
 watch([pageSize], () => {
   fetchAccounts(pageSize.value)
 })
-onMounted(async () => {
+onNuxtReady(async () => {
   await fetchAccounts(pageSize.value)
 })
 </script>

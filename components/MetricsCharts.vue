@@ -69,25 +69,6 @@
 
     <!-- Hourly Metrics View -->
     <div v-else-if="currentTab === 'hourly'" class="space-y-8">
-      <!-- 24h Activity Heatmap -->
-      <!-- <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">24h Activity Heatmap</h3>
-        <HeatMap
-          :data="hourlyHeatmapData"
-          :options="heatmapOptions"
-          class="h-[300px]"
-        />
-      </div> -->
-
-      <!-- Hourly Active Users -->
-      <!-- <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Hourly Active Users</h3>
-        <LineChart
-          :data="hourlyUsersChartData"
-          :options="hourlyUsersOptions"
-          class="h-[300px]"
-        />
-      </div> -->
 
       <!-- Hourly Volume -->
       <div class="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg p-6">

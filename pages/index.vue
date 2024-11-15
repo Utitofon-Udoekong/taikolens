@@ -101,12 +101,7 @@
       <div class="bg-white shadow rounded-lg p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Volume Trend</h3>
         <Loader v-if="loading.daily" :loading="loading.daily" />
-        <LineChart
-          v-else
-          :data="volumeChartData"
-          :options="chartOptions"
-          class="h-[300px]"
-        />
+        <LineChart v-else :data="volumeChartData" :options="chartOptions" class="h-[300px]" />
       </div>
 
       <div class="bg-white shadow rounded-lg p-6">
@@ -124,11 +119,8 @@
             <tbody class="divide-y divide-gray-200">
               <tr v-for="transfer in recentTransfers.slice(0, 5)" :key="getArray(transfer.id)">
                 <td class="whitespace-nowrap px-3 py-4 text-sm">
-                  <a
-                    :href="`https://explorer.test.taiko.xyz/tx/${getArray(transfer.transaction_hash)}`"
-                    target="_blank"
-                    class="text-blue-600 hover:text-blue-900"
-                  >
+                  <a :href="`https://explorer.test.taiko.xyz/tx/${getArray(transfer.transaction_hash)}`" target="_blank"
+                    class="text-pink-600 hover:text-pink-900">
                     {{ truncateHash(getArray(transfer.transaction_hash)) }}
                   </a>
                 </td>
@@ -143,10 +135,7 @@
           </table>
         </div>
         <div class="mt-4 text-right">
-          <NuxtLink
-            to="/transfers"
-            class="text-sm font-medium text-blue-600 hover:text-blue-500"
-          >
+          <NuxtLink to="/transfers" class="text-sm font-medium text-pink-600 hover:text-pink-500">
             View all transfers →
           </NuxtLink>
         </div>
@@ -221,12 +210,24 @@ const chartOptions = {
   }
 }
 
-// Fetch data on mount
-onMounted(async () => {
+const watchInterval = ref<NodeJS.Timeout>()
+
+onBeforeRouteLeave(() => clearInterval(watchInterval.value))
+
+onNuxtReady(async() => {
+
   await Promise.all([
     fetchRecentTransfers(5),
     fetchDailyMetrics(7),
     fetchEthPrice()
   ])
+  watchInterval.value = setInterval(async () => {
+    await Promise.all([
+      fetchRecentTransfers(5),
+      fetchDailyMetrics(7),
+      fetchEthPrice()
+    ])
+  }, 30000);
 })
+
 </script>

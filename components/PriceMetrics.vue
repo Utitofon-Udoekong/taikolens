@@ -4,21 +4,27 @@
     <dl class="grid grid-cols-1 gap-5 sm:grid-cols-2">
       <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
         <dt class="text-sm font-medium text-gray-500 truncate">ETH/USD</dt>
-        <dd class="mt-1 text-3xl font-semibold text-gray-900">
-          {{ formatCurrency(Number(ethPrice?.ethusd || 0)) }}
-        </dd>
-        <p class="mt-2 text-sm text-gray-500">
-          Updated: {{ formatDate(Number(ethPrice?.ethusd_timestamp || 0) * 1000) }}
-        </p>
+        <Loader v-if="loading" :loading="loading" />
+        <div v-else>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            {{ formatCurrency(Number(ethPrice?.ethusd || 0)) }}
+          </dd>
+          <p class="mt-2 text-sm text-gray-500">
+            Updated: {{ formatDate(Number(ethPrice?.ethusd_timestamp || 0) * 1000) }}
+          </p>
+        </div>
       </div>
       <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
         <dt class="text-sm font-medium text-gray-500 truncate">ETH/BTC</dt>
-        <dd class="mt-1 text-3xl font-semibold text-gray-900">
-          {{ Number(ethPrice?.ethbtc || 0).toFixed(6) }}
-        </dd>
-        <p class="mt-2 text-sm text-gray-500">
-          Updated: {{ formatDate(Number(ethPrice?.ethbtc_timestamp || 0) * 1000) }}
-        </p>
+        <Loader v-if="loading" :loading="loading" />
+        <div v-else>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            {{ Number(ethPrice?.ethbtc || 0).toFixed(6) }}
+          </dd>
+          <p class="mt-2 text-sm text-gray-500">
+            Updated: {{ formatDate(Number(ethPrice?.ethbtc_timestamp || 0) * 1000) }}
+          </p>
+        </div>
       </div>
     </dl>
   </div>
@@ -33,6 +39,7 @@ const props = defineProps<{
     ethbtc_timestamp: string
     ethusd: string
     ethusd_timestamp: string
-  } | null
+  } | null,
+  loading: boolean
 }>()
-</script> 
+</script>

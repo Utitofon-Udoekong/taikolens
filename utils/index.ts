@@ -15,7 +15,21 @@ export const formatCurrency = (value: number) => {
     }).format(value)
 }
 
-export const formatNumber = (value: string) => {
+function abbrvNumber(num: number) {
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + 'M';
+    } else if (num >= 1e3) {
+      return (num / 1e3).toFixed(2) + 'K';
+    } else {
+      return num.toLocaleString();
+    }
+  }
+export const formatNumber = (value: string, truncate?: boolean) => {
+    if(truncate){
+        return abbrvNumber(parseInt(value))
+    }
     return parseInt(value).toLocaleString()
 }
 
@@ -53,6 +67,7 @@ export interface BlockReward {
     blockNumber: string;
     timeStamp: string;
     blockReward: string;
+    blockMiner: string;
 }
 
 export interface TokenLoader {
@@ -63,7 +78,7 @@ export interface TokenLoader {
     accounts: boolean;
     blockRewards: boolean;
     ethPrice: boolean;
-    ethSupply: boolean;
+    usdtSupply: boolean;
 }
 
 export interface EthPrice {

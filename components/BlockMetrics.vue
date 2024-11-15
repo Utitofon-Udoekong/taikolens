@@ -4,17 +4,21 @@
     <dl class="grid grid-cols-1 gap-5 sm:grid-cols-2">
       <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
         <dt class="text-sm font-medium text-gray-500 truncate">Latest Block Reward</dt>
-        <dd class="mt-1 text-3xl font-semibold text-gray-900">
-          {{ formatEther(latestBlockReward?.blockReward || '0') }} ETH
-        </dd>
-        <p class="mt-2 text-sm text-gray-500">
-          Block #{{ latestBlockReward?.blockNumber || '0' }}
-        </p>
+        <Loader v-if="loadingRewards" :loading="loadingRewards" />
+        <div v-else>
+          <dd class="mt-1 text-3xl font-semibold text-gray-900">
+            {{ formatEther(latestBlockReward?.blockReward || '0') }} USDT
+          </dd>
+          <p class="mt-2 text-sm text-gray-500">
+            Block #{{ latestBlockReward?.blockNumber || '0' }}
+          </p>
+        </div>
       </div>
       <div class="px-4 py-5 bg-gray-50 shadow rounded-lg overflow-hidden sm:p-6">
-        <dt class="text-sm font-medium text-gray-500 truncate">Total ETH Supply</dt>
-        <dd class="mt-1 text-3xl font-semibold text-gray-900">
-          {{ formatNumber(ethSupply || '0') }} ETH
+        <dt class="text-sm font-medium text-gray-500 truncate">Total USDT Supply</dt>
+        <Loader v-if="loadingSupply" :loading="loadingSupply" />
+        <dd v-else class="mt-1 text-3xl font-semibold text-gray-900">
+          {{ formatNumber(usdtSupply || '0', true) }} USDT
         </dd>
       </div>
     </dl>
@@ -26,6 +30,8 @@ import { formatEther, formatNumber } from '~/utils'
 
 const props = defineProps<{
   latestBlockReward: { blockNumber: string; blockReward: string } | null
-  ethSupply: string
+  usdtSupply: string,
+  loadingRewards: boolean,
+  loadingSupply: boolean
 }>()
-</script> 
+</script>

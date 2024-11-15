@@ -1,6 +1,6 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
-        <nav class="bg-white shadow-sm">
+    <div class="min-h-screen bg-gray-50 relative">
+        <nav class="bg-white shadow-md fixed inset-x-0 top-0">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex">
@@ -22,7 +22,7 @@
             </div>
         </nav>
 
-        <div class="py-6">
+        <div class="py-6 mt-14">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <slot />
             </div>

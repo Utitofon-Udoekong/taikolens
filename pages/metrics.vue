@@ -10,8 +10,9 @@
     </div>
 
     <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2 ">
-      <BlockMetrics :latest-block-reward="latestBlockReward" :eth-supply="ethSupply" />
-      <PriceMetrics :eth-price="ethPrice" />
+      <BlockMetrics :loadingRewards="loading.blockRewards" :latest-block-reward="latestBlockReward"
+        :usdt-supply="usdtSupply" :loading-supply="loading.usdtSupply" />
+      <PriceMetrics :loading="loading.ethPrice" :eth-price="ethPrice" />
     </div>
 
     <div class="">
@@ -47,13 +48,13 @@ const {
   hourlyMetrics,
   blockRewards,
   ethPrice,
-  ethSupply,
+  usdtSupply,
   loading,
   fetchDailyMetrics,
   fetchHourlyMetrics,
   fetchBlockReward,
   fetchEthPrice,
-  fetchEthSupply
+  fetchUSDTSupply
 } = useTokenData()
 
 const latestBlockReward = computed(() =>
@@ -81,16 +82,27 @@ const tabChanged = (tab: string) => {
   }
 }
 
-onMounted(async () => {
-  await Promise.all([
-    fetchDailyMetrics(dailyPageSize.value),
-    fetchHourlyMetrics(hourlyPageSize.value),
-    fetchEthPrice(),
-    fetchEthSupply()
-  ])
+const watchInterval = ref<NodeJS.Timeout>()
 
-  // Fetch the latest block reward
-  // You might want to get the latest block number first
-  await fetchBlockReward(dailyMetrics.value[0].date)
+onBeforeRouteLeave(() => clearInterval(watchInterval.value))
+
+onNuxtReady(async () => {
+  await Promise.all([
+      fetchDailyMetrics(dailyPageSize.value),
+      fetchHourlyMetrics(hourlyPageSize.value),
+      fetchEthPrice(),
+      fetchUSDTSupply(),
+      fetchBlockReward(Math.floor(new Date(dailyMetrics.value[0].date).getTime() / 1000))
+    ])
+
+  watchInterval.value = setInterval(async () => {
+    await Promise.all([
+      fetchDailyMetrics(dailyPageSize.value),
+      fetchHourlyMetrics(hourlyPageSize.value),
+      fetchEthPrice(),
+      fetchUSDTSupply(),
+      fetchBlockReward(Math.floor(new Date(dailyMetrics.value[0].date).getTime() / 1000))
+    ])
+  }, 20000);
 })
 </script>

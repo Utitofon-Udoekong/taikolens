@@ -142,7 +142,16 @@ watch([pageSize], () => {
   fetchRecentTransfers(pageSize.value)
 })
 
-onMounted(() => {
-  fetchRecentTransfers()
+const watchInterval = ref<NodeJS.Timeout>()
+
+onBeforeRouteLeave(() => clearInterval(watchInterval.value))
+
+onNuxtReady(async () => {
+
+  await fetchRecentTransfers(pageSize.value)
+
+  watchInterval.value = setInterval(async () => {
+    await fetchRecentTransfers(pageSize.value)
+  }, 20000);
 })
 </script>
