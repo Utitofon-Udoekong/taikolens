@@ -26,7 +26,6 @@ export const useTokenData = () => {
       const { data } = await useFetch<TokenMetric>('/api/token/metrics')
       if (data.value) {
         tokenMetrics.value = data.value
-        console.log(tokenMetrics.value)
       }
     } catch (error) {
       console.error('Failed to fetch token metrics:', error)
